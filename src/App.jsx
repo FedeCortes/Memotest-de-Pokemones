@@ -6,8 +6,8 @@ import Grid from '@mui/material/Grid';
 import PokemonCard from './components/PokemonCard';
 import Swal from 'sweetalert2';
 
-function App() {
 
+function App() {
   const [pokemonIds, setPokemonIds] = useState([1, 2, 3, 4, 5, 6]);
   const [seleccionado1, setSeleccionado1] = useState(null);
   const [pokemonSeleccionado1, setPokemonSeleccionado1] = useState(null);
@@ -23,7 +23,7 @@ function App() {
 
         const responses = await Promise.all(requests);
         const pokemonInfo = responses.map((response) => response.data);
-        
+
         const duplicatedPokemonData = [...pokemonInfo, ...pokemonInfo];
 
         setShuffledPokemonData(duplicatedPokemonData.sort(() => Math.random() - 0.5));
@@ -42,9 +42,6 @@ function App() {
     setPokemonIds(updatedPokemonIds);
   }, [pokemonIds]);
 
-  
-
-
   const mostrarMensajeGanador = () => {
     Swal.fire({
       title: '¡Ganaste!',
@@ -55,78 +52,83 @@ function App() {
   };
 
   const verificarSiGano = () => {
-  if (pokemonsEncontrados.length === 5) {
-    mostrarMensajeGanador();
-  }
-};
+    if (pokemonsEncontrados.length === 5) {
+      mostrarMensajeGanador();
+    }
+  };
 
-  const handleClick = (index,pokemon) => {
-    if(pokemonSeleccionado1==pokemon && index != seleccionado1){
-      
-      if(pokemonsEncontrados==null){
-        setPokemonsEncontrados(pokemon.name);
-      }else if(!pokemonsEncontrados.some(p => p === pokemon.name)){
-        
-      setPokemonsEncontrados((prevPokemonsEncontrados) => prevPokemonsEncontrados.concat(pokemon.name));
+  const handleClick = (index, pokemon) => {
+    if (pokemonSeleccionado1 === pokemon && index !== seleccionado1) {
+      if (pokemonsEncontrados === null) {
+        setPokemonsEncontrados([pokemon.name]);
+      } else if (!pokemonsEncontrados.some(p => p === pokemon.name)) {
+        setPokemonsEncontrados((prevPokemonsEncontrados) => prevPokemonsEncontrados.concat(pokemon.name));
       }
       setSeleccionado1(null);
       setPokemonSeleccionado1(null);
-      
-    verificarSiGano();  
-    }else{
-      
-    setSeleccionado1(index);
-    setPokemonSeleccionado1(pokemon)
+      verificarSiGano();
+    } else {
+      setSeleccionado1(index);
+      setPokemonSeleccionado1(pokemon);
     }
   };
 
   return (
     <>
-      <h2>Memotest con pokemones</h2>
-      <p>Pone a prueba tu memoria</p>
+      <button
+            onClick={() => {
+              setPokemonsEncontrados([]);
+              const shuffled = shuffledPokemonData.sort(() => Math.random() - 0.5);
+              setShuffledPokemonData(shuffled);
+            }}
+            style={{
+              
+              padding: '5px 10px',
+              backgroundColor: 'white',
+              color: 'black',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              display:  'inline-block'
+            }}
+          >
+            Resetear
+          </button>
       <Box
         sx={{
           border: '1px solid #000',
-          backgroundImage:"url('https://fondosmil.com/fondo/14767.jpg')",
+          backgroundImage: "url('https://fondosmil.com/fondo/14767.jpg')",
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
-          padding: '20px',
+          padding: '10px',
           display: 'flex',
-          justifyContent: 'center', // Centra horizontalmente los elementos
-          minHeight: '80vh', // Ajusta la altura para centrar verticalmente en la página
+          justifyContent: 'center',
+          minHeight: '80vh',
+          height:'100%',
+          width:'100%'
         }}
       >
-         <Grid container spacing={2}>
-    {shuffledPokemonData.map((pokemon, index) => (
-      <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-        <PokemonCard
-          pokemon={pokemon}
-          index={index}
-          handleClick={handleClick}
-          seleccionado1={seleccionado1}
-          pokemonsEncontrados={pokemonsEncontrados}
-        />
-      </Grid>
-    ))}
-  </Grid>
-  <button onClick={() => {
-    setPokemonsEncontrados([]) 
-    const shuffled = shuffledPokemonData.sort(() => Math.random() - 0.5);
-    setShuffledPokemonData(shuffled) }}
-    >
-  R <br/>
-  e <br/>
-  s <br/>
-  e <br/>
-  t <br/>
-  e <br/>
-  a <br/>
-  r
-</button>
-      </Box>
+        <Grid container spacing={1}>
+          {shuffledPokemonData.map((pokemon, index) => (
+            <Grid item xs={4} sm={4} md={3} lg={3} key={index}>
+              <div style={{ width: '100%', height: '100%' }}>
+                <PokemonCard
+                  pokemon={pokemon}
+                  index={index}
+                  handleClick={handleClick}
+                  seleccionado1={seleccionado1}
+                  pokemonsEncontrados={pokemonsEncontrados}
+                />
+              </div>
 
-     
-     
+            </Grid>
+          ))}
+          
+        </Grid>
+        
+          
+       
+      </Box>
     </>
   );
 }
