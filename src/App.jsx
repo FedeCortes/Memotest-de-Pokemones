@@ -18,7 +18,7 @@ function App() {
     const fetchData = async () => {
       try {
         const requests = pokemonIds.map((id) =>
-          axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`)
+          axios.get(`https://pokeapi.co/api/v2/pokemon/${id*5}`)
         );
 
         const responses = await Promise.all(requests);
